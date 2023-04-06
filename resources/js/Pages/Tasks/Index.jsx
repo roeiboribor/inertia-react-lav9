@@ -11,7 +11,7 @@ const Index = (props) => {
     const [modelId, setModelId] = useState("");
     const [confirmingTaskDeletion, setConfirmingTaskDeletion] = useState(false);
 
-    const { delete: destroy, reset } = useForm();
+    const { delete: destroy, reset, put } = useForm();
 
     const confirmTaskDeletion = (e) => {
         setModelId(e.target.id);
@@ -35,6 +35,12 @@ const Index = (props) => {
     const closeModal = () => {
         setConfirmingTaskDeletion(false);
         reset();
+    };
+
+    const handleCheckboxChanged = (e) => {
+        put(route("tasks.updatedIsCompleted", e.target.id), {
+            onError: () => console.log("An error has occurred!"),
+        });
     };
 
     return (
@@ -87,13 +93,12 @@ const Index = (props) => {
                                                 className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                                             >
                                                 <TextInput
+                                                    id={id}
                                                     name="is_completed"
                                                     type="checkbox"
                                                     checked={is_completed ?? ""}
-                                                    onChange={(e) =>
-                                                        console.log(
-                                                            "Do Something"
-                                                        )
+                                                    onChange={
+                                                        handleCheckboxChanged
                                                     }
                                                 />
                                             </th>

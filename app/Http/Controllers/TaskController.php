@@ -61,4 +61,12 @@ class TaskController extends Controller
         Task::find($id)->delete();
         return redirect()->route('tasks.index');
     }
+
+    public function updatedIsCompleted($id)
+    {
+        $task = Task::find($id);
+
+        $task->update(['is_completed' => !$task->is_completed]);
+        return redirect()->route('tasks.index');
+    }
 }
