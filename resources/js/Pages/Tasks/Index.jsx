@@ -1,14 +1,40 @@
+import { Link, Head, usePage, useForm } from "@inertiajs/react";
+import { useState } from "react";
 import PrimaryNavLink from "@/Components/PrimaryNavLink";
 import TextInput from "@/Components/TextInput";
-import { Link, Head, usePage } from "@inertiajs/react";
+import Modal from "@/Components/Modal";
+import SecondaryButton from "@/Components/SecondaryButton";
+import DangerButton from "@/Components/DangerButton";
 
 const Index = (props) => {
     const { tasks } = usePage().props;
+    const [modelId, setModelId] = useState("");
+    const [confirmingTaskDeletion, setConfirmingTaskDeletion] = useState(false);
 
-    const destroy = (e) => {
-        if (confirm("Are you sure you want to delete this task?")) {
-            delete route("tasks.destroy", e.currentTarget.id);
-        }
+    const { delete: destroy, reset } = useForm();
+
+    const confirmTaskDeletion = (e) => {
+        setModelId(e.target.id);
+        setConfirmingTaskDeletion(true);
+    };
+
+    const deleteTask = (e) => {
+        e.preventDefault();
+
+        destroy(route("tasks.destroy", modelId), {
+            preserveScroll: true,
+            onSuccess: () => closeModal(),
+            onError: () => console.log("An error has occurred!"),
+            onFinish: () => {
+                reset();
+                setModelId("");
+            },
+        });
+    };
+
+    const closeModal = () => {
+        setConfirmingTaskDeletion(false);
+        reset();
     };
 
     return (
@@ -64,6 +90,11 @@ const Index = (props) => {
                                                     name="is_completed"
                                                     type="checkbox"
                                                     checked={is_completed ?? ""}
+                                                    onChange={(e) =>
+                                                        console.log(
+                                                            "Do Something"
+                                                        )
+                                                    }
                                                 />
                                             </th>
                                             <td className="px-6 py-4">
@@ -83,7 +114,9 @@ const Index = (props) => {
                                                         Edit
                                                     </PrimaryNavLink>
                                                     <button
-                                                        onClick={destroy}
+                                                        onClick={
+                                                            confirmTaskDeletion
+                                                        }
                                                         id={id}
                                                         tabIndex="-1"
                                                         type="button"
@@ -110,6 +143,25 @@ const Index = (props) => {
                         </table>
                     </div>
                 </div>
+
+                <Modal show={confirmingTaskDeletion} onClose={closeModal}>
+                    <form onSubmit={deleteTask} className="p-6">
+                        <h2 className="text-lg font-medium text-gray-900">
+                            Are you sure you want to delete this task?
+                        </h2>
+
+                        <div className="mt-6 flex justify-end">
+                            <DangerButton>Confirm</DangerButton>
+
+                            <SecondaryButton
+                                onClick={closeModal}
+                                className="ml-3"
+                            >
+                                Cancel
+                            </SecondaryButton>
+                        </div>
+                    </form>
+                </Modal>
             </div>
         </>
     );
