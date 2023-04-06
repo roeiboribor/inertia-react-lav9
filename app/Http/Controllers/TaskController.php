@@ -19,9 +19,18 @@ class TaskController extends Controller
 
     public function create()
     {
+        return Inertia::render('Tasks/Create');
+    }
 
-        // Your code here
+    public function store(Request $request)
+    {
+        $task = $request->validate([
+            'title' => ['required'],
+            'description' => ['required'],
+        ]);
 
-        return view('');
+        Task::create($task);
+
+        return redirect()->route('tasks.index');
     }
 }

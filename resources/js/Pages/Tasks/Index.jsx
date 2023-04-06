@@ -1,4 +1,4 @@
-import PrimaryButton from "@/Components/PrimaryButton";
+import PrimaryNavLink from "@/Components/PrimaryNavLink";
 import TextInput from "@/Components/TextInput";
 import { Link, Head, usePage } from "@inertiajs/react";
 
@@ -15,7 +15,9 @@ const Index = (props) => {
                             <h3 className="font-bold text-xl">Tasks</h3>
                         </div>
                         <div>
-                            <PrimaryButton>Add</PrimaryButton>
+                            <PrimaryNavLink href={route("tasks.create")}>
+                                Add
+                            </PrimaryNavLink>
                         </div>
                     </div>
                     <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-full">
