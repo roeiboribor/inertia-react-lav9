@@ -33,4 +33,32 @@ class TaskController extends Controller
 
         return redirect()->route('tasks.index');
     }
+
+    public function edit(Task $task)
+    {
+        return Inertia::render('Tasks/Edit', [
+            'task' => $task
+        ]);
+    }
+
+    public function update($id, Request $request)
+    {
+        $request->validate([
+            'title' => ['required'],
+            'description' => ['required'],
+        ]);
+
+        Task::find($id)->update([
+            'title' => $request->title,
+            'description' => $request->description,
+        ]);
+
+        return redirect()->route('tasks.index');
+    }
+
+    public function destroy($id)
+    {
+        Task::find($id)->delete();
+        return redirect()->route('tasks.index');
+    }
 }

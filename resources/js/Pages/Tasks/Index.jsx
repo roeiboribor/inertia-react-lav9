@@ -5,6 +5,12 @@ import { Link, Head, usePage } from "@inertiajs/react";
 const Index = (props) => {
     const { tasks } = usePage().props;
 
+    const destroy = (e) => {
+        if (confirm("Are you sure you want to delete this task?")) {
+            delete route("tasks.destroy", e.currentTarget.id);
+        }
+    };
+
     return (
         <>
             <Head title="Tasks" />
@@ -39,32 +45,57 @@ const Index = (props) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {tasks.map(({ id, title, description }) => (
-                                    <tr
-                                        key={id}
-                                        className="bg-white border-b dark:bg-gray-900 dark:border-gray-700"
-                                    >
-                                        <th
-                                            scope="row"
-                                            className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                                {tasks.map(
+                                    ({
+                                        id,
+                                        title,
+                                        description,
+                                        is_completed,
+                                    }) => (
+                                        <tr
+                                            key={id}
+                                            className="bg-white border-b dark:bg-gray-900 dark:border-gray-700"
                                         >
-                                            <TextInput
-                                                name="is_completed[]"
-                                                type="checkbox"
-                                            />
-                                        </th>
-                                        <td className="px-6 py-4">Silver</td>
-                                        <td className="px-6 py-4">Laptop</td>
-                                        <td className="px-6 py-4">
-                                            <a
-                                                href="#"
-                                                className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                            <th
+                                                scope="row"
+                                                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                                             >
-                                                Edit
-                                            </a>
-                                        </td>
-                                    </tr>
-                                ))}
+                                                <TextInput
+                                                    name="is_completed"
+                                                    type="checkbox"
+                                                    checked={is_completed ?? ""}
+                                                />
+                                            </th>
+                                            <td className="px-6 py-4">
+                                                {title}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                {description}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center space-x-2">
+                                                    <PrimaryNavLink
+                                                        href={route(
+                                                            "tasks.edit",
+                                                            id
+                                                        )}
+                                                    >
+                                                        Edit
+                                                    </PrimaryNavLink>
+                                                    <button
+                                                        onClick={destroy}
+                                                        id={id}
+                                                        tabIndex="-1"
+                                                        type="button"
+                                                        className="mx-1 px-4 py-2 text-sm text-white bg-red-500 rounded-md"
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )
+                                )}
                                 {tasks.length === 0 && (
                                     <tr>
                                         <td
