@@ -1,13 +1,15 @@
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
-import { Link, Head } from "@inertiajs/react";
+import { Link, Head, usePage } from "@inertiajs/react";
 
-const Index = () => {
+const Index = (props) => {
+    const { tasks } = usePage().props;
+
     return (
         <>
             <Head title="Tasks" />
             <div className="min-h-screen bg-gray-100">
-                <div className="max-w-7xl mx-auto min-h-screen flex flex-col items-center justify-center bg-white px-8">
+                <div className="max-w-7xl mx-auto min-h-screen flex flex-col justify-center bg-white px-8">
                     <div className="flex items-center justify-between mb-4 w-full px-8">
                         <div>
                             <h3 className="font-bold text-xl">Tasks</h3>
@@ -35,27 +37,42 @@ const Index = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                                    <th
-                                        scope="row"
-                                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                                {tasks.map(({ id, title, description }) => (
+                                    <tr
+                                        key={id}
+                                        className="bg-white border-b dark:bg-gray-900 dark:border-gray-700"
                                     >
-                                        <TextInput
-                                            name="is_completed[]"
-                                            type="checkbox"
-                                        />
-                                    </th>
-                                    <td className="px-6 py-4">Silver</td>
-                                    <td className="px-6 py-4">Laptop</td>
-                                    <td className="px-6 py-4">
-                                        <a
-                                            href="#"
-                                            className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                        <th
+                                            scope="row"
+                                            className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                                         >
-                                            Edit
-                                        </a>
-                                    </td>
-                                </tr>
+                                            <TextInput
+                                                name="is_completed[]"
+                                                type="checkbox"
+                                            />
+                                        </th>
+                                        <td className="px-6 py-4">Silver</td>
+                                        <td className="px-6 py-4">Laptop</td>
+                                        <td className="px-6 py-4">
+                                            <a
+                                                href="#"
+                                                className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                            >
+                                                Edit
+                                            </a>
+                                        </td>
+                                    </tr>
+                                ))}
+                                {tasks.length === 0 && (
+                                    <tr>
+                                        <td
+                                            className="px-6 py-4 border-t text-center"
+                                            colSpan="4"
+                                        >
+                                            No task found.
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
                     </div>
