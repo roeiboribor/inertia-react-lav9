@@ -5,17 +5,35 @@ import TextInput from "@/Components/TextInput";
 import Modal from "@/Components/Modal";
 import SecondaryButton from "@/Components/SecondaryButton";
 import DangerButton from "@/Components/DangerButton";
+import PrimaryButton from "@/Components/PrimaryButton";
+import EditTask from "./Modals/EditTask";
 
 const Index = (props) => {
     const { tasks } = usePage().props;
     const [modelId, setModelId] = useState("");
     const [confirmingTaskDeletion, setConfirmingTaskDeletion] = useState(false);
+    const [confirmingTaskEdit, setConfirmingTaskEdit] = useState(false);
 
     const { delete: destroy, reset, put } = useForm();
 
     const confirmTaskDeletion = (e) => {
         setModelId(e.target.id);
         setConfirmingTaskDeletion(true);
+    };
+
+    const closeModal = () => {
+        setConfirmingTaskDeletion(false);
+        reset();
+    };
+
+    const confirmTaskEdit = (e) => {
+        setModelId(e.target.id);
+        setConfirmingTaskEdit(true);
+    };
+
+    const closeModalEdit = () => {
+        setConfirmingTaskDeletion(false);
+        reset();
     };
 
     const deleteTask = (e) => {
@@ -30,11 +48,6 @@ const Index = (props) => {
                 setModelId("");
             },
         });
-    };
-
-    const closeModal = () => {
-        setConfirmingTaskDeletion(false);
-        reset();
     };
 
     const handleCheckboxChanged = (e) => {
@@ -110,14 +123,15 @@ const Index = (props) => {
                                             </td>
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center space-x-2">
-                                                    <PrimaryNavLink
-                                                        href={route(
-                                                            "tasks.edit",
-                                                            id
-                                                        )}
+                                                    <PrimaryButton
+                                                        id={id}
+                                                        type="button"
+                                                        onClick={
+                                                            confirmTaskEdit
+                                                        }
                                                     >
                                                         Edit
-                                                    </PrimaryNavLink>
+                                                    </PrimaryButton>
                                                     <button
                                                         onClick={
                                                             confirmTaskDeletion
@@ -166,6 +180,18 @@ const Index = (props) => {
                             </SecondaryButton>
                         </div>
                     </form>
+                </Modal>
+
+                <Modal
+                    id="EditTaskModal"
+                    show={confirmingTaskEdit}
+                    onClose={closeModalEdit}
+                >
+                    <EditTask
+                        modelId={modelId}
+                        setConfirmingTaskEdit={setConfirmingTaskEdit}
+                        setModelId={setModelId}
+                    />
                 </Modal>
             </div>
         </>

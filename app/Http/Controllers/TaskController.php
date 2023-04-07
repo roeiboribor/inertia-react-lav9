@@ -34,13 +34,6 @@ class TaskController extends Controller
         return redirect()->route('tasks.index');
     }
 
-    public function edit(Task $task)
-    {
-        return Inertia::render('Tasks/Edit', [
-            'task' => $task
-        ]);
-    }
-
     public function update($id, Request $request)
     {
         $request->validate([
@@ -53,7 +46,7 @@ class TaskController extends Controller
             'description' => $request->description,
         ]);
 
-        return redirect()->route('tasks.index');
+        return Inertia::render('Tasks/Index');
     }
 
     public function destroy($id)
