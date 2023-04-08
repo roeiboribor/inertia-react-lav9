@@ -19,4 +19,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/tasks/edit', [TaskController::class, 'edit']);
+Route::get('/tasks/{id}/edit', [TaskController::class, 'edit']);
+Route::post('/tasks/update', [TaskController::class, 'update']);

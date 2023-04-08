@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class TaskController extends Controller
@@ -37,7 +38,10 @@ class TaskController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'title' => ['required'],
+            'title' => [
+                'required',
+                Rule::unique('tasks')->ignore($id)
+            ],
             'description' => ['required'],
         ]);
 
@@ -46,7 +50,8 @@ class TaskController extends Controller
             'description' => $request->description,
         ]);
 
-        return Inertia::render('Tasks/Index');
+        // Removed redirect due to modal only
+        // return redirect()->route('tasks.index');
     }
 
     public function destroy($id)

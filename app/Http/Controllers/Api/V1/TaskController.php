@@ -8,12 +8,20 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
-    public function edit(Request $request)
+    public function edit($id)
     {
-        $task = Task::find($request->id);
+        $task = Task::find($id);
         return response()->json([
             'title' => $task->title,
             'description' => $task->description,
+        ]);
+    }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'title' => ['required'],
+            'description' => ['required'],
         ]);
     }
 }

@@ -4,34 +4,32 @@ import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SecondaryButton from "@/Components/SecondaryButton";
 import TextInput from "@/Components/TextInput";
-import { useForm, usePage } from "@inertiajs/react";
-import { useEffect, useState } from "react";
+import { useForm } from "@inertiajs/react";
+import { useEffect } from "react";
 
 const EditTask = ({ modelId, setConfirmingTaskEdit, setModelId }) => {
-    const { data, setData, errors, processing, hasErrors, put } = useForm({
+    const { data, setData, errors, processing, put } = useForm({
         title: "",
         description: "",
     });
 
     const getTask = async (e) => {
         const item = await axios
-            .post(`/api/tasks/edit`, {
-                id: modelId,
-            })
+            .get(`/api/tasks/${modelId}/edit`)
             .then((data) => data.data);
 
         setData(item);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        put(route("tasks.update", modelId));
-        console.log(data);
-        console.log(errors);
-        console.log(hasErrors);
-        // Check If No Errors
-        // setModelId("");
-        // setConfirmingTaskEdit(false);
+
+        put(route("tasks.update", modelId), {
+            onSuccess: (page) => {
+                setModelId("");
+                setConfirmingTaskEdit(false);
+            },
+        });
     };
 
     const closeModal = () => {
@@ -75,7 +73,8 @@ const EditTask = ({ modelId, setConfirmingTaskEdit, setModelId }) => {
                 <PrimaryButton
                     id="updateBtn"
                     type="submit"
-                    className="bg-green-500 hover:bg-green-600 transition focus:bg-green-600 active:bg-green-600"
+                    disabled={processing}
+                    className="bg-green-500 hover:bg-green-600 transition focus:bg-green-600 active:bg-green-600 shadow"
                 >
                     Update
                 </PrimaryButton>
